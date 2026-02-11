@@ -3,7 +3,7 @@
 
 from gi.repository import Gtk, Handy
 
-from manuskript.data import Settings
+from manuskript.data import Settings, SettingsKeys
 from manuskript.util import AppSettings, AppSettingsKeys
 
 
@@ -32,12 +32,12 @@ class GeneralPage:
         self.generalLanguage.set_active(self.generalLanguageValueIndex(self.appSettings.getValue(AppSettingsKeys.GENERAL_LANGUAGE)))
         self.generalFontSize.set_value(self.appSettings.getValue(AppSettingsKeys.GENERAL_FONTSIZE))
         self.automaticLoad.set_active(self.appSettings.getValue(AppSettingsKeys.AUTOMATIC_LOAD))
-        self.autoSave.set_active(self.settings.get("autoSave"))
-        self.autoSaveDelay.set_value(self.settings.get("autoSaveDelay"))
-        self.autoSaveNoChanges.set_active(self.settings.get("autoSaveNoChanges"))
-        self.autoSaveNoChangesDelay.set_value(self.settings.get("autoSaveNoChangesDelay"))
-        self.saveOnQuit.set_active(self.settings.get("saveOnQuit"))
-        self.saveToZip.set_active(self.settings.get("saveToZip"))
+        self.autoSave.set_active(self.settings.get(SettingsKeys.AUTO_SAVE))
+        self.autoSaveDelay.set_value(self.settings.get(SettingsKeys.AUTO_SAVE_DELAY))
+        self.autoSaveNoChanges.set_active(self.settings.get(SettingsKeys.AUTO_SAVE_NO_CHANGES))
+        self.autoSaveNoChangesDelay.set_value(self.settings.get(SettingsKeys.AUTO_SAVE_NO_CHANGES_DELAY))
+        self.saveOnQuit.set_active(self.settings.get(SettingsKeys.SAVE_ON_QUIT))
+        self.saveToZip.set_active(self.settings.get(SettingsKeys.SAVE_TO_ZIP))
 
         self.generalLanguage.connect("changed", self._generalLanguageChanged)
         self.generalFontSize.connect("value-changed", self._generalFontSizeChanged)
@@ -74,19 +74,19 @@ class GeneralPage:
         self.appSettings.setValue(AppSettingsKeys.AUTOMATIC_LOAD, button.get_active())
 
     def _autoSaveToggled(self, button: Gtk.ToggleButton):
-        self.settings.set("autoSave", button.get_active())
+        self.settings.set(SettingsKeys.AUTO_SAVE, button.get_active())
 
     def _autoSaveChanged(self, button: Gtk.SpinButton):
-        self.settings.set("autoSaveDelay", button.get_value())
+        self.settings.set(SettingsKeys.AUTO_SAVE_DELAY, button.get_value())
 
     def _autoSaveNoChangesToggled(self, button: Gtk.ToggleButton):
-        self.settings.set("autoSaveNoChanges", button.get_active())
+        self.settings.set(SettingsKeys.AUTO_SAVE_NO_CHANGES, button.get_active())
 
     def _autoSaveNoChangesChanged(self, button: Gtk.SpinButton):
-        self.settings.set("autoSaveNoChangesDelay", button.get_value())
+        self.settings.set(SettingsKeys.AUTO_SAVE_NO_CHANGES_DELAY, button.get_value())
 
     def _saveOnQuitToggled(self, button: Gtk.ToggleButton):
-        self.settings.set("saveOnQuit", button.get_active())
+        self.settings.set(SettingsKeys.SAVE_ON_QUIT, button.get_active())
 
     def _saveToZipToggled(self, button: Gtk.ToggleButton):
-        self.settings.set("saveToZip", button.get_active())
+        self.settings.set(SettingsKeys.SAVE_TO_ZIP, button.get_active())
