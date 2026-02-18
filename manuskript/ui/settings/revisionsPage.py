@@ -47,16 +47,16 @@ class RevisionsPage:
         self.settings.set(SettingsKeys.Revisions.SMARTREMOVE, button.get_active())
 
     def _revisionPerMinuteChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_MINUTE, button.get_value())
+        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_MINUTE, button.get_value_as_int())
 
     def _revisionPer10MinutesChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_10_MINUTES, button.get_value())
+        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_10_MINUTES, button.get_value_as_int())
 
     def _revisionPerHourChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_HOUR, button.get_value())
+        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_HOUR, button.get_value_as_int())
 
     def _revisionPerDayChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_DAY, button.get_value())
+        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_DAY, button.get_value_as_int())
 
     def _revisionPerWeekChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_WEEK, button.get_value())
+        self.settings.set(SettingsKeys.Revisions.Rules.DELAY_PER_WEEK, button.get_value_as_int())

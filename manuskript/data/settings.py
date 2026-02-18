@@ -49,10 +49,12 @@ class SettingsKeys:
             DELAY_PER_DAY = "revisions.rules.2592000"
             DELAY_PER_WEEK = "revisions.rules.null"
     class TextEditor:
+        ALWAYS_CENTER = "textEditor.alwaysCenter"
         BACKGROUND = "textEditor.background"
         BACKGROUND_TRANSPARENT = "textEditor.backgroundTransparent"
         CURSOR_NOT_BLINKING = "textEditor.cursorNotBlinking"
         CURSOR_WIDTH = "textEditor.cursorWidth"
+        FOCUS_MODE = "textEditor.focusMode"
         FONT = "textEditor.font"
         FONT_COLOR = "textEditor.fontColor"
         INDENT = "textEditor.indent"

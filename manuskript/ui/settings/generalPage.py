@@ -68,7 +68,7 @@ class GeneralPage:
         self.appSettings.setValue(AppSettingsKeys.GENERAL_LANGUAGE, value)
 
     def _generalFontSizeChanged(self, button: Gtk.SpinButton):
-        self.appSettings.setValue(AppSettingsKeys.GENERAL_FONTSIZE, button.get_value())
+        self.appSettings.setValue(AppSettingsKeys.GENERAL_FONTSIZE, button.get_value_as_int())
 
     def _automaticLoadToggled(self, button: Gtk.ToggleButton):
         self.appSettings.setValue(AppSettingsKeys.AUTOMATIC_LOAD, button.get_active())
@@ -77,13 +77,13 @@ class GeneralPage:
         self.settings.set(SettingsKeys.AUTO_SAVE, button.get_active())
 
     def _autoSaveChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.AUTO_SAVE_DELAY, button.get_value())
+        self.settings.set(SettingsKeys.AUTO_SAVE_DELAY, button.get_value_as_int())
 
     def _autoSaveNoChangesToggled(self, button: Gtk.ToggleButton):
         self.settings.set(SettingsKeys.AUTO_SAVE_NO_CHANGES, button.get_active())
 
     def _autoSaveNoChangesChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.AUTO_SAVE_NO_CHANGES_DELAY, button.get_value())
+        self.settings.set(SettingsKeys.AUTO_SAVE_NO_CHANGES_DELAY, button.get_value_as_int())
 
     def _saveOnQuitToggled(self, button: Gtk.ToggleButton):
         self.settings.set(SettingsKeys.SAVE_ON_QUIT, button.get_active())

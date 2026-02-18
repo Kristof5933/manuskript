@@ -62,7 +62,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
     <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_text_editor_line_spacing">
-    <property name="upper">100</property>
+    <property name="upper">999</property>
     <property name="value">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
@@ -113,19 +113,25 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name internalid -->
+      <column type="gchararray"/>
     </columns>
     <data>
       <row>
         <col id="0" translatable="yes">None</col>
+        <col id="1" translatable="yes"/>
       </row>
       <row>
         <col id="0" translatable="yes">Sentence</col>
+        <col id="1" translatable="yes">sentence</col>
       </row>
       <row>
         <col id="0" translatable="yes">Line</col>
+        <col id="1" translatable="yes">line</col>
       </row>
       <row>
         <col id="0" translatable="yes">Paragraph</col>
+        <col id="1" translatable="yes">paragraph</col>
       </row>
     </data>
   </object>
@@ -140,19 +146,25 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
     <columns>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name spacing_id -->
+      <column type="gint"/>
     </columns>
     <data>
       <row>
         <col id="0" translatable="yes">Single</col>
+        <col id="1">100</col>
       </row>
       <row>
         <col id="0" translatable="yes">1.5 lines</col>
+        <col id="1">150</col>
       </row>
       <row>
         <col id="0" translatable="yes">Double</col>
+        <col id="1">200</col>
       </row>
       <row>
         <col id="0" translatable="yes">Proportional</col>
+        <col id="1">0</col>
       </row>
     </data>
   </object>
@@ -164,27 +176,33 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
       <column type="GtkJustification"/>
       <!-- column-name stock_id -->
       <column type="gchararray"/>
+      <!-- column-name justification_id -->
+      <column type="gint"/>
     </columns>
     <data>
       <row>
         <col id="0" translatable="yes">Left</col>
         <col id="1">left</col>
         <col id="2" translatable="yes">format-justify-left</col>
+        <col id="3">0</col>
       </row>
       <row>
         <col id="0" translatable="yes">Center</col>
         <col id="1">center</col>
         <col id="2" translatable="yes">format-justify-center</col>
+        <col id="3">1</col>
       </row>
       <row>
         <col id="0" translatable="yes">Right</col>
         <col id="1">right</col>
         <col id="2" translatable="yes">format-justify-right</col>
+        <col id="3">2</col>
       </row>
       <row>
         <col id="0" translatable="yes">Justify</col>
         <col id="1">fill</col>
         <col id="2" translatable="yes">format-justify-fill</col>
+        <col id="3">3</col>
       </row>
     </data>
   </object>
@@ -1568,7 +1586,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkColorButton">
+                          <object class="GtkColorButton" id="text_editor_colors_background">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
@@ -1609,7 +1627,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkColorButton">
+                          <object class="GtkColorButton" id="text_editor_colors_foreground">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
@@ -1630,7 +1648,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="text_editor_colors_restore_defaults">
                         <property name="label" translatable="yes">Restore defaults</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -1701,11 +1719,12 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFontButton">
+                          <object class="GtkFontButton" id="text_editor_font_family">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="receives-default">False</property>
                             <property name="font">Sans 12</property>
+                            <property name="level">GTK_FONT_CHOOSER_LEVEL_FAMILY</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -1741,7 +1760,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_font_size">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -1783,7 +1802,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkColorButton">
+                          <object class="GtkColorButton" id="text_editor_misspelled">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
@@ -1848,7 +1867,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                         <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkCheckButton" id="checkbutton1">
+                          <object class="GtkCheckButton" id="text_editor_text_area_max_width">
                             <property name="label" translatable="yes">Max width:</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -1864,7 +1883,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_text_area_width">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="text" translatable="yes">0</property>
@@ -1906,7 +1925,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_text_area_top_bottom_margins">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="text" translatable="yes">0</property>
@@ -1948,7 +1967,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_text_area_left_right_margins">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="text" translatable="yes">0</property>
@@ -2029,7 +2048,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBox">
+                          <object class="GtkComboBox" id="text_editor_paragraphs_alignment">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="model">text_alignment</property>
@@ -2081,7 +2100,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBox">
+                          <object class="GtkComboBox" id="text_editor_paragraphs_line_spacing">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="model">line_spacing</property>
@@ -2113,7 +2132,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                         <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_paragraphs_line_spacing_proportional">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -2165,7 +2184,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_paragraphs_tab_width">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -2193,7 +2212,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                         <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkCheckButton">
+                          <object class="GtkCheckButton" id="text_editor_paragraphs_indent_first_line">
                             <property name="label" translatable="yes">Indent first line</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -2245,7 +2264,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_paragraphs_spacing_above">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -2272,7 +2291,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                         <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_paragraphs_spacing_below">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -2350,7 +2369,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                         <property name="can-focus">False</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkCheckButton" id="checkbutton2">
+                          <object class="GtkCheckButton" id="text_editor_cursor_block_insertion">
                             <property name="label" translatable="yes">Use block insertion of</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -2364,7 +2383,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="text_editor_cursor_block_insertion_size">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="input-purpose">number</property>
@@ -2386,7 +2405,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton3">
+                      <object class="GtkCheckButton" id="text_editor_cursor_disable_blinking">
                         <property name="label" translatable="yes">Disable blinking</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -2401,7 +2420,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton4">
+                      <object class="GtkCheckButton" id="text_editor_cursor_typewriter_mode">
                         <property name="label" translatable="yes">Typewriter mode</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -2435,7 +2454,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBox">
+                          <object class="GtkComboBox" id="text_editor_cursor_focus_mode">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="model">focus_modes</property>
@@ -2527,16 +2546,16 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
   </object>
   <object class="GtkSizeGroup">
     <widgets>
-      <widget name="checkbutton1"/>
+      <widget name="text_editor_text_area_max_width"/>
       <widget name="label21"/>
       <widget name="label20"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup">
     <widgets>
-      <widget name="checkbutton2"/>
-      <widget name="checkbutton3"/>
-      <widget name="checkbutton4"/>
+      <widget name="text_editor_cursor_block_insertion"/>
+      <widget name="text_editor_cursor_disable_blinking"/>
+      <widget name="text_editor_cursor_typewriter_mode"/>
       <widget name="label33"/>
     </widgets>
   </object>
