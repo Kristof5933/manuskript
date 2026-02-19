@@ -4,7 +4,7 @@
 from gi.repository import Gtk, Gdk
 
 from manuskript.data import Settings, SettingsKeys
-from manuskript.ui.util import rgbaFromHex, rgbaToHex
+from manuskript.ui.util import rgbaFromHex
 from manuskript.ui.settings.abstractPage import AbstractPage
 from manuskript.ui.settings.widgetGroup import WidgetGroupBuilder, WidgetGroup
 
@@ -77,7 +77,6 @@ class ViewsPage(AbstractPage):
         self.textEditorTextAreaWidth: Gtk.SpinButton = builder.get_object("text_editor_text_area_width")
         self.textEditorTextAreaTopBottomMargins: Gtk.SpinButton = builder.get_object("text_editor_text_area_top_bottom_margins")
         self.textEditorTextAreaLeftRightMargins: Gtk.SpinButton = builder.get_object("text_editor_text_area_left_right_margins")
-
         self.textEditorParagraphsAlignment: Gtk.ComboBox = builder.get_object("text_editor_paragraphs_alignment")
         self.textEditorParagraphsLineSpacing: Gtk.ComboBox = builder.get_object("text_editor_paragraphs_line_spacing")
         self.textEditorParagraphsLineSpacingProportional: Gtk.SpinButton = builder.get_object("text_editor_paragraphs_line_spacing_proportional")
@@ -107,7 +106,6 @@ class ViewsPage(AbstractPage):
         self.setActiveComboItem(self.indexCardsColorsBackgroundColor, settings.get(SettingsKeys.ViewSettings.Cork.BACKGROUND), 0)
         self.setActiveComboItem(self.indexCardsColorsBorderColor, settings.get(SettingsKeys.ViewSettings.Cork.BORDER), 0)
         self.setActiveComboItem(self.indexCardsColorsCornerColor, settings.get(SettingsKeys.ViewSettings.Cork.CORNER), 0)
-        # TODO : not working
         self.indexCardsStyleGroup.setActiveFromSelection(settings.get(SettingsKeys.CORK_STYLE))        
         self.indexCardsBackgroundColor.set_rgba(rgbaFromHex(settings.get(SettingsKeys.CorkBackground.COLOR)))
         self.indexCardsBackgroundImage.set_filename(settings.get(SettingsKeys.CorkBackground.IMAGE))
@@ -149,6 +147,7 @@ class ViewsPage(AbstractPage):
             self.textEditorCursorBlockInsertionSize.set_sensitive(True)
             self.textEditorCursorBlockInsertionSize.set_value(cursorBlockSize)
         self.textEditorCursorDisableBlinking.set_active(settings.get(SettingsKeys.TextEditor.CURSOR_NOT_BLINKING))
+
         # Original manuskript discrepency, "always center" is used as "typewriter mode"
         self.textEditorCursorTypewriterMode.set_active(settings.get(SettingsKeys.TextEditor.ALWAYS_CENTER)) 
         focusMode=settings.get(SettingsKeys.TextEditor.FOCUS_MODE)
@@ -157,89 +156,50 @@ class ViewsPage(AbstractPage):
         
         self.setActiveComboItem(self.textEditorCursorFocusMode, focusMode, 1)
 
-        self.treeIconColor.connect("changed", self._treeIconColorChanged)        
-        self.treeTextColor.connect("changed", self._treeTextColorChanged)
-        self.treeBackgroundColor.connect("changed", self._treeBackgroundColorChanged)
+        self.treeIconColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Tree.ICON})
+        self.treeTextColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Tree.TEXT})
+        self.treeBackgroundColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Tree.BACKGROUND})
         self.treeIconSize.connect("value-changed", self._treeIconSizeChanged)
-        self.treeCharWordCounter.connect("toggled", self._treeCharWordCountToggled)
-        self.treeFoldersGroup.connect("toggled", self._treeFoldersGroupToggled)
-        self.treeTextGroup.connect("toggled", self._treeTextGroupToggled)
-        self.outlineIconColor.connect("changed", self._outlineIconColorChanged)        
-        self.outlineTextColor.connect("changed", self._outlineTextColorChanged)
-        self.outlineBackgroundColor.connect("changed", self._outlineBackgroundColorChanged)
+        self.treeCharWordCounter.connect("toggled", self._genericToggleButtonToggled, SettingsKeys.COUNT_SPACES)
+        self.treeFoldersGroup.connect("toggled", self._genericToggleButtonGroupToggled, SettingsKeys.ViewSettings.Tree.INFO_FOLDER)
+        self.treeTextGroup.connect("toggled", self._genericToggleButtonGroupToggled, SettingsKeys.ViewSettings.Tree.INFO_TEXT)
+        self.outlineIconColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Outline.ICON})
+        self.outlineTextColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Outline.TEXT})
+        self.outlineBackgroundColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Outline.BACKGROUND})
         self.outlineVisibleColumnsGroup.connect("toggled", self._oulineVisibleColumnsToggled)
-        self.indexCardsColorsIconColor.connect("changed", self._indexCardsColorsIconColorChanged)
-        self.indexCardsColorsTextColor.connect("changed", self._indexCardsColorsTextColorChanged)
-        self.indexCardsColorsBackgroundColor.connect("changed", self._indexCardsColorsBackgroundColorChanged)
-        self.indexCardsColorsBorderColor.connect("changed", self._indexCardsColorsBorderColorChanged)
-        self.indexCardsColorsCornerColor.connect("changed", self._indexCardsColorsCornerColorChanged)
+        self.indexCardsColorsIconColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Cork.ICON})
+        self.indexCardsColorsTextColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Cork.TEXT})
+        self.indexCardsColorsBackgroundColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Cork.BACKGROUND})
+        self.indexCardsColorsBorderColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Cork.BORDER})
+        self.indexCardsColorsCornerColor.connect("changed", self._genericComboChanged, {'column': 0, 'settingsKeys': SettingsKeys.ViewSettings.Cork.CORNER})
         self.indexCardsStyleGroup.connect("toggled", self._indexCardsColorsStyleChanged)
-        self.indexCardsBackgroundColor.connect("color-set", self._indexCardsBackgroundColorColorSet)
+        self.indexCardsBackgroundColor.connect("color-set", self._genericColorButtonColorSet, SettingsKeys.CorkBackground.COLOR)
         self.indexCardsBackgroundImage.connect("file-set", self._indexCardsBackgroundImageFileSet)
-        self.textEditorColorsBackground.connect("color-set", self._textEditorColorsBackgroundColorSet)
-        self.textEditorColorsForeground.connect("color-set", self._textEditorColorsForegroundColorSet)
+        self.textEditorColorsBackground.connect("color-set", self._genericColorButtonColorSet, SettingsKeys.TextEditor.BACKGROUND)
+        self.textEditorColorsForeground.connect("color-set", self._genericColorButtonColorSet, SettingsKeys.TextEditor.FONT_COLOR)
         self.textEditorColorsRestoreDefaults.connect("clicked", self._textEditorColorsRestoreDefaultsClicked)
         self.textEditorFontFamily.connect("font-set", self._textEditorFontFamilyFontSet)
         self.textEditorFontSize.connect("value-changed", self._textEditorFontSizeValueChanged)
-        self.textEditorMisspelled.connect("color-set", self._textEditorMisspelledColorSet)
+        self.textEditorMisspelled.connect("color-set", self._genericColorButtonColorSet, SettingsKeys.TextEditor.MISSPELLED)
         self.textEditorTextAreaMaxWidth.connect("toggled", self._textEditorTextAreaMaxWidthToggled)
-        self.textEditorTextAreaWidth.connect("value-changed", self._textEditorTextareaWidthValueChanged)
-        self.textEditorTextAreaTopBottomMargins.connect("value-changed", self._textEditorTextAreaTopBottomMarginsValueChanged)
-        self.textEditorTextAreaLeftRightMargins.connect("value-changed", self._textEditorTextAreaLeftRightMarginsValueChanged)
-        self.textEditorParagraphsAlignment.connect("changed", self._textEditorParagraphsAlignmentChanged)
+        self.textEditorTextAreaWidth.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.MAX_WIDTH)
+        self.textEditorTextAreaTopBottomMargins.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.MARGINS_TB)
+        self.textEditorTextAreaLeftRightMargins.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.MARGINS_LR)
+        self.textEditorParagraphsAlignment.connect("changed", self._genericComboChanged, {'column': 3, 'settingsKeys': SettingsKeys.TextEditor.TEXT_ALIGNMENT})
         self.textEditorParagraphsLineSpacing.connect("changed", self._textEditorParagraphsLineSpacingChanged)
-        self.textEditorParagraphsLineSpacingProportional.connect("value-changed", self._textEditorParagraphsLineSpacingProportionalValueChanged)
-        self.textEditorParagraphsTabWidth.connect("value-changed", self._standardSpinButtonValueChanged, SettingsKeys.TextEditor.TAB_WIDTH)
-        self.textEditorParagraphsIndentFirstLine.connect("toggled", self._standardToggleButtonToggled, SettingsKeys.TextEditor.INDENT)
-        self.textEditorParagraphsSpacingAbove.connect("value-changed", self._standardSpinButtonValueChanged, SettingsKeys.TextEditor.SPACING_ABOVE)
-        self.textEditorParagraphsSpacingBelow.connect("value-changed", self._standardSpinButtonValueChanged, SettingsKeys.TextEditor.SPACING_BELOW)
+        self.textEditorParagraphsLineSpacingProportional.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.LINE_SPACING)
+        self.textEditorParagraphsTabWidth.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.TAB_WIDTH)
+        self.textEditorParagraphsIndentFirstLine.connect("toggled", self._genericToggleButtonToggled, SettingsKeys.TextEditor.INDENT)
+        self.textEditorParagraphsSpacingAbove.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.SPACING_ABOVE)
+        self.textEditorParagraphsSpacingBelow.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.SPACING_BELOW)
         self.textEditorCursorBlockInsertion.connect("toggled", self._textEditorCursorBlockInsertionToggled, SettingsKeys.TextEditor.CURSOR_WIDTH)
-        self.textEditorCursorBlockInsertionSize.connect("value-changed", self._standardSpinButtonValueChanged, SettingsKeys.TextEditor.CURSOR_WIDTH)
-        self.textEditorCursorDisableBlinking.connect("toggled", self._standardToggleButtonToggled, SettingsKeys.TextEditor.CURSOR_NOT_BLINKING)
-        self.textEditorCursorTypewriterMode.connect("toggled", self._standardToggleButtonToggled, SettingsKeys.TextEditor.ALWAYS_CENTER)
+        self.textEditorCursorBlockInsertionSize.connect("value-changed", self._genericSpinButtonValueChanged, SettingsKeys.TextEditor.CURSOR_WIDTH)
+        self.textEditorCursorDisableBlinking.connect("toggled", self._genericToggleButtonToggled, SettingsKeys.TextEditor.CURSOR_NOT_BLINKING)
+        self.textEditorCursorTypewriterMode.connect("toggled", self._genericToggleButtonToggled, SettingsKeys.TextEditor.ALWAYS_CENTER)
         self.textEditorCursorFocusMode.connect("changed", self._textEditorCurosFocusModeChanged)
-
-        print("done")
-
-
-    def _treeIconColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Tree.ICON, value)
-
-    def _treeTextColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Tree.TEXT, value)
-
-    def _treeBackgroundColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Tree.BACKGROUND, value)
 
     def _treeIconSizeChanged(self, scale: Gtk.Scale):
         self.settings.set(SettingsKeys.ViewSettings.Tree.ICON_SIZE, scale.get_value())
-
-    def _treeCharWordCountToggled(self, toggleButton: Gtk.ToggleButton):
-        self.settings.set(SettingsKeys.COUNT_SPACES, toggleButton.get_active())
-
-    def _treeFoldersGroupToggled(self, button: Gtk.RadioButton, value: str):
-        if button.get_active():
-            self.settings.set(SettingsKeys.ViewSettings.Tree.INFO_FOLDER, value)
-
-    def _treeTextGroupToggled(self, button: Gtk.RadioButton, value: str):
-        if button.get_active():
-            self.settings.set(SettingsKeys.ViewSettings.Tree.INFO_TEXT, value)
-
-    def _outlineIconColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Outline.ICON, value)
-
-    def _outlineTextColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Outline.TEXT, value)
 
     def _outlineBackgroundColorChanged(self, combo: Gtk.ComboBox):
         value = self.getComboSelectedValue(combo, 0)
@@ -249,46 +209,12 @@ class ViewsPage(AbstractPage):
     def _oulineVisibleColumnsToggled(self, checkbutton: Gtk.CheckButton, *args):
         self.settings.set(SettingsKeys.OUTLINE_VIEW_COLUMNS, self.outlineVisibleColumnsGroup.fetchAllActive())
 
-    def _indexCardsColorsIconColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Cork.ICON, value)
-
-    def _indexCardsColorsTextColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Cork.TEXT, value)
-
-    def _indexCardsColorsBackgroundColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Cork.BACKGROUND, value)
-
-    def _indexCardsColorsBorderColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Cork.BORDER, value)
-
-    def _indexCardsColorsCornerColorChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 0)
-
-        self.settings.set(SettingsKeys.ViewSettings.Cork.CORNER, value)
-
     def _indexCardsColorsStyleChanged(self, button: Gtk.RadioButton, value):
         if button.get_active():
-            self.settings.set(SettingsKeys.ViewSettings.Tree.INFO_TEXT, value)
-
-    def _indexCardsBackgroundColorColorSet(self, button: Gtk.ColorButton):
-        self.settings.set(SettingsKeys.CorkBackground.COLOR, rgbaToHex(button.get_rgba()))
+            self.settings.set(SettingsKeys.CORK_STYLE, value)
 
     def _indexCardsBackgroundImageFileSet(self, button: Gtk.FileChooser):
         self.settings.set(SettingsKeys.CorkBackground.IMAGE, button.get_filename())
-
-    def _textEditorColorsBackgroundColorSet(self, button: Gtk.ColorButton):
-        self.settings.set(SettingsKeys.TextEditor.BACKGROUND, rgbaToHex(button.get_rgba()))
-
-    def _textEditorColorsForegroundColorSet(self, button: Gtk.ColorButton):
-        self.settings.set(SettingsKeys.TextEditor.FONT_COLOR, rgbaToHex(button.get_rgba()))
 
     def _textEditorColorsRestoreDefaultsClicked(self, button: Gtk.Button):
         backgroundColor="#ffffff"
@@ -325,9 +251,6 @@ class ViewsPage(AbstractPage):
         currentFont=self.settings.get(SettingsKeys.TextEditor.FONT)
         self.settings.set(SettingsKeys.TextEditor.FONT, self.replaceFontSize(currentFont, button.get_value_as_int()))
 
-    def _textEditorMisspelledColorSet(self, button: Gtk.ColorButton):
-        self.settings.set(SettingsKeys.TextEditor.MISSPELLED, rgbaToHex(button.get_rgba()))
-
     def _textEditorTextAreaMaxWidthToggled(self, button: Gtk.ToggleButton):
         if button.get_active():
             self.settings.set(SettingsKeys.TextEditor.MAX_WIDTH, 0)
@@ -342,34 +265,15 @@ class ViewsPage(AbstractPage):
             self.textEditorTextAreaWidth.set_value(lastEditedValue)
             self.textEditorTextAreaWidth.set_sensitive(True)
 
-    def _textEditorTextareaWidthValueChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.TextEditor.MAX_WIDTH, button.get_value_as_int())
-
-    def _textEditorTextAreaTopBottomMarginsValueChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.TextEditor.MARGINS_TB, button.get_value_as_int())
-
-    def _textEditorTextAreaLeftRightMarginsValueChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.TextEditor.MARGINS_LR, button.get_value_as_int())
-
-    def _textEditorParagraphsAlignmentChanged(self, combo: Gtk.ComboBox):
-        value = self.getComboSelectedValue(combo, 3)
-
-        self.settings.set(SettingsKeys.TextEditor.TEXT_ALIGNMENT, value)
-
     def _textEditorParagraphsLineSpacingChanged(self, combo: Gtk.ComboBox):
         value = self.getComboSelectedValue(combo, 1)
 
-        print(f"Value: {value}")
-        
         if value!=0:
             self.settings.set(SettingsKeys.TextEditor.LINE_SPACING, value)
             self.textEditorParagraphsLineSpacingProportional.set_sensitive(False)
         else:
             self.settings.set(SettingsKeys.TextEditor.LINE_SPACING, self.textEditorParagraphsLineSpacingProportional.get_value_as_int())
             self.textEditorParagraphsLineSpacingProportional.set_sensitive(True)
-
-    def _textEditorParagraphsLineSpacingProportionalValueChanged(self, button: Gtk.SpinButton):
-        self.settings.set(SettingsKeys.TextEditor.LINE_SPACING, button.get_value_as_int())
 
     def _textEditorCursorBlockInsertionToggled(self, button: Gtk.ToggleButton, settingsKey: str):
         if button.get_active():

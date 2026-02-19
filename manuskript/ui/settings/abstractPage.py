@@ -2,18 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from gi.repository import Gtk
+from manuskript.data import Settings
+from manuskript.ui.util import rgbaToHex
 
 class AbstractPage:
-        
-    def findComboValueIndex(self, combobox: Gtk.ComboBox, value: str, column: int):
-        model = combobox.get_model()
+    settings: Settings
 
-        row: Gtk.TreeModelRow
-        for i, row in enumerate(model):
-            if row[column] == value:
-                return i
-        return None
-    
     def setActiveComboItem(self, combobox: Gtk.ComboBox, value: str, column: int):
         model = combobox.get_model()
 
@@ -46,13 +40,20 @@ class AbstractPage:
             if radioSettingsValue==value:
                 radioWidget.set_active(True)
 
-    def _standardSpinButtonValueChanged(self, button: Gtk.SpinButton, settingsKey: str):
+    def _genericSpinButtonValueChanged(self, button: Gtk.SpinButton, settingsKey: str):
         self.settings.set(settingsKey, button.get_value_as_int())
 
-    def _standardComboChanged(self, combo: Gtk.ComboBox, userData: dict):
+    def _genericComboChanged(self, combo: Gtk.ComboBox, userData: dict):
         value = self.getComboSelectedValue(combo, userData["column"])
         self.settings.set(userData["settingsKey"], value)
 
-    def _standardToggleButtonToggled(self, toggleButton: Gtk.ToggleButton, settingsKey: str):
+    def _genericToggleButtonGroupToggled(self, toggleButton: Gtk.ToggleButton, *args):
+        if toggleButton.get_active():
+            self.settings.set(args[1], args[0])
+
+    def _genericToggleButtonToggled(self, toggleButton: Gtk.ToggleButton, settingsKey):
         self.settings.set(settingsKey, toggleButton.get_active())
+
+    def _genericColorButtonColorSet(self, button: Gtk.ColorButton, settingsKey):
+        self.settings.set(settingsKey, rgbaToHex(button.get_rgba()))
 
