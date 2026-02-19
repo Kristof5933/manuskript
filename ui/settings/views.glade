@@ -119,7 +119,7 @@ along with Manuskript.  If not, see <http://www.gnu.org/licenses/>.
     <data>
       <row>
         <col id="0" translatable="yes">None</col>
-        <col id="1" translatable="yes"/>
+        <col id="1" translatable="yes">none</col>
       </row>
       <row>
         <col id="0" translatable="yes">Sentence</col>
