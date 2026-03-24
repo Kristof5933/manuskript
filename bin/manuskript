@@ -27,8 +27,16 @@ sys.path.insert(1, app_path)
 os.chdir(app_path)
 
 from manuskript.ui import MainWindow
+from manuskript.util import AppSettings, AppSettingsKeys
 
-defaultProjectPath = os.path.join(os.getcwd(), "sample-projects/book-of-acts.msk")
+projectPath = os.path.join(os.getcwd(), "sample-projects/book-of-acts.msk")
+
+appSettings = AppSettings.getCommonInstance()
+
+if appSettings.getValue(AppSettingsKeys.AUTOMATIC_LOAD):
+    lastProject = appSettings.getValue(AppSettingsKeys.LAST_PROJECT)
+    if lastProject:
+        projectPath = lastProject
 
 parser = argparse.ArgumentParser(description="Open a Manuskript project")
 parser.add_argument(
@@ -39,7 +47,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-projectPath = os.path.abspath(args.msk_path) if args.msk_path else defaultProjectPath
+if args.msk_path:
+    projectPath = os.path.abspath(args.msk_path)
 
 if not os.path.exists(projectPath):
     print(f"Error: project path does not exist: {projectPath}")

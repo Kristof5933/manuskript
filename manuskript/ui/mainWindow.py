@@ -17,7 +17,7 @@ from manuskript.ui.importWindow import ImportWindow
 from manuskript.ui.settingsWindow import SettingsWindow
 from manuskript.ui.startupWindow import StartupWindow
 from manuskript.ui.util import bindMenuItem, packViewIntoSlot, unpackFromSlot
-from manuskript.util import parseFilenameFromURL, validString, AppSettings
+from manuskript.util import parseFilenameFromURL, validString, AppSettings, AppSettingsKeys
 
 
 class MainWindow:
@@ -200,7 +200,10 @@ class MainWindow:
         self.idleStackSelection = GLib.idle_add(self.__checkStackSelection, priority=GLib.PRIORITY_HIGH_IDLE)
 
         self.startupWindow.hide()
+        self.appSettings.setValue(AppSettingsKeys.LAST_PROJECT, path)
         self.show()
+
+        
 
     def closeProject(self):
         if 0 != self.idleStackSelection:

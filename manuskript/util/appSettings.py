@@ -2,19 +2,38 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
+from dataclasses import dataclass
+from typing import Generic, TypeVar, Type
 from enum import Enum
 from gi.repository import GLib
 import os
 
-class AppSettingsKeys(Enum):
-    AUTOMATIC_LOAD = ("startup", "automaticLoad", False)
-    GENERAL_LANGUAGE = ("preferences", "generalLanguage", "English")
-    GENERAL_FONTSIZE = ("preferences", "generalFontSize", 4.0)
+T = TypeVar("T")
+@dataclass
+class ConfigValue(Generic[T]):
+    groupName: str
+    keyName: str
+    defaultValue: T | None
+    dataType: None
 
-    def __init__(self, groupName: str, keyName: str, defaultValue: any):
-        self.groupName: str = groupName
-        self.keyName: str = keyName
-        self.defaultValue: any = defaultValue
+    def __init__(self, groupName: str, keyName: str, defaultValue: T, dataType: Type[T]):
+        self.groupName = groupName
+        self.keyName = keyName
+        self.defaultValue = defaultValue
+        self.dataType = dataType
+
+class AppSettingsKeys(Enum):
+    AUTOMATIC_LOAD = ConfigValue("startup", "automaticLoad", False, bool)
+    LAST_PROJECT = ConfigValue("startup", "lastProject", None, str)
+    GENERAL_LANGUAGE = ConfigValue("preferences", "generalLanguage", "English", str)
+    GENERAL_FONTSIZE = ConfigValue("preferences", "generalFontSize", 4.0, float)
+
+#    def __init__(self, groupName: str, keyName: str, defaultValue: any):
+    def __init__(self, keyInfo: ConfigValue):
+        self.groupName: str = keyInfo.groupName
+        self.keyName: str = keyInfo.keyName
+        self.defaultValue = keyInfo.defaultValue
+        self.dataType = keyInfo.dataType
 
 class AppSettings:
     _instance = None
@@ -81,11 +100,11 @@ class AppSettings:
         self.settings = {}
 
         for key in AppSettingsKeys:
-            self.settings[key] = self._getValue(key.groupName, key.keyName, key.defaultValue)
+            self.settings[key] = self._getValue(key.groupName, key.keyName, key.defaultValue, key.dataType)
 
         self._initialized = True
 
-    def _getValue(self, groupName: str, keyName: str, defaultValue: any):
+    def _getValue(self, groupName: str, keyName: str, defaultValue: any, dataType: any):
         if not self.keyfile.has_group(groupName):
             return defaultValue
         
@@ -93,7 +112,7 @@ class AppSettings:
         if not keyName in keys:
             return defaultValue
         
-        methodName = self.keyfileGetters[type(defaultValue)]
+        methodName = self.keyfileGetters[dataType]
         getter = getattr(self.keyfile, methodName)
         return getter(groupName, keyName)
     
