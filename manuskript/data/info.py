@@ -59,3 +59,43 @@ class Info(AbstractData):
 
         self.file.save((metadata, None))
         self.complete()
+
+    def setTitle(self, title: str):
+        if self.title != title:
+            self.title = title
+            self.notifyDataChanged()
+
+    def setSubtitle(self, subtitle: str):
+        if self.subtitle != subtitle:
+            self.subtitle = subtitle
+            self.notifyDataChanged()
+
+    def setSerie(self, serie: str):
+        if self.serie != serie:
+            self.serie = serie
+            self.notifyDataChanged()
+
+    def setVolume(self, volume: str):
+        if self.volume != volume:
+            self.volume = volume
+            self.notifyDataChanged()
+
+    def setGenre(self, genre: str):
+        if self.genre != genre:
+            self.genre = genre
+            self.notifyDataChanged()
+
+    def setLicense(self, license: str):
+        if self.license != license:
+            self.license = license
+            self.notifyDataChanged()
+
+    def setAuthor(self, author: str):
+        if self.author != author:
+            self.author = author
+            self.notifyDataChanged()
+
+    def setEmail(self, email: str):
+        if self.email != email:
+            self.email = email
+            self.notifyDataChanged()

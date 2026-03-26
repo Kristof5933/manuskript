@@ -2,7 +2,7 @@
 # --!-- coding: utf8 --!--
 
 from enum import Enum, unique
-
+from manuskript.data.signals import Signals
 
 @unique
 class DataStatus(Enum):
@@ -19,6 +19,7 @@ class AbstractData:
     def __init__(self, path: str):
         self.dataPath = path
         self.dataStatus = DataStatus.UNDEFINED
+        self.signals = Signals.getCommonInstance()
 
     def changePath(self, path: str):
         print("{} -> {}".format(self.dataPath, path))
@@ -36,3 +37,6 @@ class AbstractData:
 
     def save(self):
         self.dataStatus = DataStatus.SAVING
+
+    def notifyDataChanged(self):
+        self.signals.emit("data-content-changed")

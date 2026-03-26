@@ -61,7 +61,7 @@ class AppSettings:
 
     def __init__(self) -> None:
         if not AppSettings._initAllowed:
-            raise Exception("Please use getUniqueInstance")
+            raise Exception("Please use Appsettings.getCommonInstance")
         
         self.callbacks: dict[str, list[Callable[[Any], None]]] = defaultdict(list)
         AppSettings._initialized = True

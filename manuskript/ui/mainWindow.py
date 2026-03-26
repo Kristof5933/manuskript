@@ -33,8 +33,10 @@ class MainWindow:
         builder = Gtk.Builder()
         builder.add_from_file("ui/main.glade")
 
-        self.window = builder.get_object("main_window")
+        self.currentTitle = ""
+        self.window: Gtk.Window = builder.get_object("main_window")        
         self.window.connect("destroy", Gtk.main_quit)
+        self.window.set_title("boohoo")
 
         self.headerBar = builder.get_object("header_bar")
         self.leaflet = builder.get_object("leaflet")
@@ -117,6 +119,8 @@ class MainWindow:
 
         self.reloadDictionaries()
         self.hide()
+
+        self.signals.connect("title-changed", self._titleChanged)
 
     def getProject(self) -> Project:
         return self.project
@@ -374,3 +378,25 @@ class MainWindow:
 
     def _notify(self, obj: GObject.Object, pspec: GObject.ParamSpec):
         print(pspec.name + " = " + str(obj.get_property(pspec.name)))
+
+    def _delayedTitleUpdate(self):
+        if not self.project.info.title:
+            title = "Untitled"
+        else:
+            title = self.project.info.title
+
+        if self.project.hasDataChanges:
+            title=f"*{title}"
+
+        self.window.set_title(title)
+        self.headerBar.set_subtitle(title)
+        
+        delattr(self, "_title_update_timer")
+        return False
+
+    def _titleChanged(self):
+        if hasattr(self, "_title_update_timer"):
+            GLib.source_remove(self._title_update_timer)
+
+        self._title_update_timer = GLib.timeout_add(300, self._delayedTitleUpdate)
+

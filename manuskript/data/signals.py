@@ -13,7 +13,7 @@ class Signals:
 
     def __init__(self) -> None:
         if not Signals._initAllowed:
-            raise Exception("Please use getUniqueInstance")
+            raise Exception("Please use Signals.getCommonInstance")
         
         self.callbacks: dict[str, list[Callable[[Any], None]]] = defaultdict(list)
         Signals._initialized = True

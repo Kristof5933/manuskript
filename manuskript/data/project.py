@@ -17,6 +17,7 @@ from manuskript.data.plots import Plots
 from manuskript.data.world import World
 from manuskript.data.outline import Outline
 from manuskript.data.revisions import Revisions
+from manuskript.data.signals import Signals
 from manuskript.io.mskFile import MskFile
 from manuskript.util import profileTime
 from manuskript.data.links import LinkAction, Links
@@ -27,6 +28,7 @@ class Project(AbstractData):
     def __init__(self, path: str):
         AbstractData.__init__(self, path)
         self.file = MskFile(self.dataPath)
+        self.hasDataChanges: bool = False
 
         self.version = Version(self.file.directoryPath)
         self.info = Info(self.file.directoryPath)
@@ -44,6 +46,8 @@ class Project(AbstractData):
         self.settings.set("saveToZip", self.file.isZipFile(), False)
 
         self.settings.links.add(self._saveSettings)
+
+        self.signals.connect("data-content-changed", self._dataContentChanged)
 
     def __del__(self):
         del self.file
@@ -85,7 +89,11 @@ class Project(AbstractData):
         self.outline.changePath(self.file.directoryPath)
         self.revisions.changePath(self.file.directoryPath)
 
+    def publishProjectTitle(self):
+        self.signals.emit("title-changed")
+
     def load(self):
+        self.hasDataChanges = False
         AbstractData.load(self)
 
         try:
@@ -108,6 +116,7 @@ class Project(AbstractData):
 
         self.file.setZipFile(self.settings.isEnabled("saveToZip"))
         self.complete()
+        self.publishProjectTitle()
 
     def save(self):
         AbstractData.save(self)
@@ -129,7 +138,14 @@ class Project(AbstractData):
         #self.revisions.save()
 
         self.file.save(saveToZip)
+        self.hasDataChanges = False
         self.complete()
+        self.publishProjectTitle()
 
     def _saveSettings(self, action: LinkAction, UID: UniqueID, settings: Settings):
         profileTime(self.save)
+
+    def _dataContentChanged(self):
+        print("Data in project has changed")
+        self.hasDataChanges = True
+        self.publishProjectTitle()

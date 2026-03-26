@@ -66,12 +66,15 @@ class SummaryView(AbstractView):
         self.stack.set_visible_child_name(page)
 
     def __situationChanged(self, buffer: Gtk.EntryBuffer):
-        self.summary.situation = invalidString(buffer.get_text())
+        print("bah")
+        self.summary.setSituation(invalidString(buffer.get_text()))
 
     def _situationDeletedText(self, buffer: Gtk.EntryBuffer, position, count):
+        print("oops")
         self.__situationChanged(buffer)
 
     def _situationInsertedText(self, buffer: Gtk.EntryBuffer, position, value, count):
+        print("I did it again")
         self.__situationChanged(buffer)
 
     def _summaryOneSentenceChanged(self, buffer: Gtk.TextBuffer):
@@ -81,7 +84,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.oneSentenceLabel.set_text("Words: {}".format(WordCounter.count(text)))
-        self.summary.sentence = invalidString(text)
+        self.summary.setSentence(invalidString(text))
 
     def _summaryOneParagraphChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -90,7 +93,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.oneParagraphLabel.set_text("Words: {}".format(WordCounter.count(text)))
-        self.summary.paragraph = invalidString(text)
+        self.summary.setParagraph(invalidString(text))
 
     def _summaryOnePageChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -99,7 +102,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.onePageLabel.set_text("Words: {} (~{} pages)".format(WordCounter.count(text), PageCounter.count(text)))
-        self.summary.page = invalidString(text)
+        self.summary.setPage(invalidString(text))
 
     def _summaryFullChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -108,7 +111,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.fullLabel.set_text("Words: {} (~{} pages)".format(WordCounter.count(text), PageCounter.count(text)))
-        self.summary.full = invalidString(text)
+        self.summary.setFull(invalidString(text))
 
     def _nextClicked(self, button: Gtk.Button):
         tree_iter = self.stackCombo.get_active_iter()
