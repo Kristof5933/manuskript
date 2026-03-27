@@ -51,27 +51,17 @@ class Summary(AbstractData):
         self.file.save((metadata, None))
         self.complete()
 
-    def setSituation(self, situation: str):
-        if situation != self.situation:
-            self.situation = situation
-            self.notifyDataChanged()
+    def setSituationNotifyOnChange(self, situation: str):
+        self._updateFieldNotifyOnChange("situation", situation)
 
-    def setSentence(self, sentence: str):
-        if self.sentence != sentence:
-            self.sentence = sentence
-            self.notifyDataChanged()
+    def setSentenceNotifyOnChange(self, sentence: str):
+        self._updateFieldNotifyOnChange("sentence", sentence)
 
-    def setParagraph(self, paragraph: str):
-        if self.paragraph != paragraph:
-            self.paragraph = paragraph
-            self.notifyDataChanged()
+    def setParagraphNotifyOnChange(self, paragraph: str):
+        self._updateFieldNotifyOnChange("paragraph", paragraph)
 
-    def setPage(self, page: str):
-        if self.page != page:
-            self.page = page
-            self.notifyDataChanged()
+    def setPageNotifyOnChange(self, page: str):
+        self._updateFieldNotifyOnChange("page", page)
 
-    def setFull(self, full: str):
-        if self.full != full:
-            self.full = full
-            self.notifyDataChanged()
+    def setFullNotifyOnChange(self, full: str):
+        self._updateFieldNotifyOnChange("full", full)

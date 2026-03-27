@@ -385,7 +385,7 @@ class MainWindow:
         else:
             title = self.project.info.title
 
-        if self.project.hasDataChanges:
+        if bool(self.project.dataChanges):
             title=f"*{title}"
 
         self.window.set_title(title)

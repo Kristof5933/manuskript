@@ -60,42 +60,26 @@ class Info(AbstractData):
         self.file.save((metadata, None))
         self.complete()
 
-    def setTitle(self, title: str):
-        if self.title != title:
-            self.title = title
-            self.notifyDataChanged()
+    def setTitleNotifyOnChange(self, title: str):
+        self._updateFieldNotifyOnChange("title", title)
 
-    def setSubtitle(self, subtitle: str):
-        if self.subtitle != subtitle:
-            self.subtitle = subtitle
-            self.notifyDataChanged()
+    def setSubtitleNotifyOnChange(self, subtitle: str):
+        self._updateFieldNotifyOnChange("subtitle", subtitle)
 
-    def setSerie(self, serie: str):
-        if self.serie != serie:
-            self.serie = serie
-            self.notifyDataChanged()
+    def setSerieNotifyOnChange(self, serie: str):
+        self._updateFieldNotifyOnChange("serie", serie)
 
-    def setVolume(self, volume: str):
-        if self.volume != volume:
-            self.volume = volume
-            self.notifyDataChanged()
+    def setVolumeNotifyOnChange(self, volume: str):
+        self._updateFieldNotifyOnChange("volume", volume)
 
-    def setGenre(self, genre: str):
-        if self.genre != genre:
-            self.genre = genre
-            self.notifyDataChanged()
+    def setGenreNotifyOnChange(self, genre: str):
+        self._updateFieldNotifyOnChange("genre", genre)
 
-    def setLicense(self, license: str):
-        if self.license != license:
-            self.license = license
-            self.notifyDataChanged()
+    def setLicenseNotifyOnChange(self, license: str):
+        self._updateFieldNotifyOnChange("license", license)
 
-    def setAuthor(self, author: str):
-        if self.author != author:
-            self.author = author
-            self.notifyDataChanged()
+    def setAuthorNotifyOnChange(self, author: str):
+        self._updateFieldNotifyOnChange("author", author)
 
-    def setEmail(self, email: str):
-        if self.email != email:
-            self.email = email
-            self.notifyDataChanged()
+    def setEmailNotifyOnChange(self, email: str):
+        self._updateFieldNotifyOnChange("email", email)

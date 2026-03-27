@@ -67,7 +67,7 @@ class SummaryView(AbstractView):
 
     def __situationChanged(self, buffer: Gtk.EntryBuffer):
         print("bah")
-        self.summary.setSituation(invalidString(buffer.get_text()))
+        self.summary.setSituationNotifyOnChange(invalidString(buffer.get_text()))
 
     def _situationDeletedText(self, buffer: Gtk.EntryBuffer, position, count):
         print("oops")
@@ -84,7 +84,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.oneSentenceLabel.set_text("Words: {}".format(WordCounter.count(text)))
-        self.summary.setSentence(invalidString(text))
+        self.summary.setSentenceNotifyOnChange(invalidString(text))
 
     def _summaryOneParagraphChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -93,7 +93,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.oneParagraphLabel.set_text("Words: {}".format(WordCounter.count(text)))
-        self.summary.setParagraph(invalidString(text))
+        self.summary.setParagraphNotifyOnChange(invalidString(text))
 
     def _summaryOnePageChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -102,7 +102,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.onePageLabel.set_text("Words: {} (~{} pages)".format(WordCounter.count(text), PageCounter.count(text)))
-        self.summary.setPage(invalidString(text))
+        self.summary.setPageNotifyOnChange(invalidString(text))
 
     def _summaryFullChanged(self, buffer: Gtk.TextBuffer):
         start_iter = buffer.get_start_iter()
@@ -111,7 +111,7 @@ class SummaryView(AbstractView):
         text = buffer.get_text(start_iter, end_iter, False)
 
         self.fullLabel.set_text("Words: {} (~{} pages)".format(WordCounter.count(text), PageCounter.count(text)))
-        self.summary.setFull(invalidString(text))
+        self.summary.setFullNotifyOnChange(invalidString(text))
 
     def _nextClicked(self, button: Gtk.Button):
         tree_iter = self.stackCombo.get_active_iter()

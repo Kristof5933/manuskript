@@ -57,28 +57,28 @@ class GeneralView(AbstractView):
         self.emailBuffer.connect("inserted-text", self._emailInsertedText)
 
     def __titleChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setTitle(invalidString(buffer.get_text()))
+        self.info.setTitleNotifyOnChange(invalidString(buffer.get_text()))
 
     def __subtitleChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setSubtitle(invalidString(buffer.get_text()))
+        self.info.setSubtitleNotifyOnChange(invalidString(buffer.get_text()))
 
     def __seriesChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setSerie(invalidString(buffer.get_text()))
+        self.info.setSerieNotifyOnChange(invalidString(buffer.get_text()))
 
     def __volumeChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setVolume(invalidString(buffer.get_text()))
+        self.info.setVolumeNotifyOnChange(invalidString(buffer.get_text()))
 
     def __genreChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setGenre(invalidString(buffer.get_text()))
+        self.info.setGenreNotifyOnChange(invalidString(buffer.get_text()))
 
     def __licenseChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setLicense(invalidString(buffer.get_text()))
+        self.info.setLicenseNotifyOnChange(invalidString(buffer.get_text()))
 
     def __nameChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setAuthor(invalidString(buffer.get_text()))
+        self.info.setAuthorNotifyOnChange(invalidString(buffer.get_text()))
 
     def __emailChanged(self, buffer: Gtk.EntryBuffer):
-        self.info.setEmail(invalidString(buffer.get_text()))
+        self.info.setEmailNotifyOnChange(invalidString(buffer.get_text()))
 
     def _titleDeletedText(self, buffer: Gtk.EntryBuffer, position, count):
         self.__titleChanged(buffer)
