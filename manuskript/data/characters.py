@@ -116,6 +116,38 @@ class Character(AbstractData):
         self.file.save((metadata, None))
         self.complete()
 
+    def setNameNotifyOnChange(self, name: str):
+        self._updateFieldNotifyOnChange("name", name)
+
+    def setMotivationNotifyOnChange(self, motivation: str):
+        self._updateFieldNotifyOnChange("motivation", motivation)
+
+    def setGoalNotifyOnChange(self, goal: str):
+        self._updateFieldNotifyOnChange("goal", goal)
+
+    def setConflictNotifyOnChange(self, conflict: str):
+        self._updateFieldNotifyOnChange("conflict", conflict)
+
+    def setEpiphanyNotifyOnChange(self, epiphany: str):
+        self._updateFieldNotifyOnChange("epiphany", epiphany)
+
+    def setSummarySentenceNotifyOnChange(self, summarySentence: str):
+        self._updateFieldNotifyOnChange("summarySentence", summarySentence)
+
+    def setSummaryParagraphNotifyOnChange(self, summaryParagraph: str):
+        self._updateFieldNotifyOnChange("summaryParagraph", summaryParagraph)
+
+    def setSummaryFullNotifyOnChange(self, summaryFull: str):
+        self._updateFieldNotifyOnChange("summaryFull", summaryFull)
+
+    def setNotesNotifyOnChange(self, notes: str):
+        self._updateFieldNotifyOnChange("notes", notes)
+
+    def setImportanceNotifyOnChange(self, importance: Importance):
+        self._updateFieldNotifyOnChange("importance", importance)
+
+    def setPOVNotifyOnChange(self, POV: bool):
+        self._updateFieldNotifyOnChange("POV", POV)
 
 class Characters(AbstractData):
 

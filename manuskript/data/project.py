@@ -28,7 +28,7 @@ class Project(AbstractData):
     def __init__(self, path: str):
         AbstractData.__init__(self, path)
         self.file = MskFile(self.dataPath)
-        self.dataChanges: set[str] = set()
+        self.dirtyComponents: set[str] = set()
 
         self.version = Version(self.file.directoryPath)
         self.info = Info(self.file.directoryPath)
@@ -93,7 +93,7 @@ class Project(AbstractData):
         self.signals.emit("title-changed")
 
     def load(self):
-        self.dataChanges = set()
+        self.dirtyComponents = set()
         AbstractData.load(self)
 
         try:
@@ -138,7 +138,7 @@ class Project(AbstractData):
         #self.revisions.save()
 
         self.file.save(saveToZip)
-        self.dataChanges = set()
+        self.dirtyComponents = set()
         self.complete()
         self.publishProjectTitle()
 
@@ -149,8 +149,8 @@ class Project(AbstractData):
         print(f"Data in project has changed. {userData['sender']} => isDirty={userData['isDirty']}")
 
         if userData['isDirty']:
-            self.dataChanges.add(userData['sender'])
+            self.dirtyComponents.add(userData['sender'])
         else:
-            self.dataChanges.remove(userData['sender'])
+            self.dirtyComponents.remove(userData['sender'])
 
         self.publishProjectTitle()

@@ -223,8 +223,6 @@ class MainWindow:
             self.outlineView = unpackFromSlot(self.outlineSlot, self.outlineView)
             self.editorView = unpackFromSlot(self.editorSlot, self.editorView)
 
-            self.signals.clear()
-
             del self.project
             self.project = None
 
@@ -385,7 +383,7 @@ class MainWindow:
         else:
             title = self.project.info.title
 
-        if bool(self.project.dataChanges):
+        if bool(self.project.dirtyComponents):
             title=f"*{title}"
 
         self.window.set_title(title)

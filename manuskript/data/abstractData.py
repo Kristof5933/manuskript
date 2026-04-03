@@ -21,7 +21,7 @@ class AbstractData:
         self.dataPath = path
         self.dataStatus = DataStatus.UNDEFINED
         self.signals = Signals.getCommonInstance()
-        self.dataChanges = {}
+        self.fieldChecksums = {}
 
     def changePath(self, path: str):
         print("{} -> {}".format(self.dataPath, path))
@@ -36,10 +36,11 @@ class AbstractData:
 
     def load(self):
         self.dataStatus = DataStatus.LOADING
+        self.fieldChecksums = {}
 
     def save(self):
         self.dataStatus = DataStatus.SAVING
-        self.dataChanges = {}
+        self.fieldChecksums = {}
 
     def __checksum(self, data):
         b = repr(data).encode('utf-8')
@@ -55,17 +56,17 @@ class AbstractData:
 
         setattr(self, attributeName, newValue)
 
-        original_checksum = self.dataChanges.get(key)
+        originalChecksum = self.fieldChecksums.get(key)
 
-        if original_checksum is None:
-            self.dataChanges[key] = self.__checksum(oldValue)
+        if originalChecksum is None:
+            self.fieldChecksums[key] = self.__checksum(oldValue)
 
-        elif original_checksum == self.__checksum(newValue):
-            self.dataChanges.pop(key)
+        elif originalChecksum == self.__checksum(newValue):
+            self.fieldChecksums.pop(key)
 
         print(f"{key}")
 
-        userData = {'sender': self.__class__.__name__, 'isDirty': bool(self.dataChanges)}
+        userData = {'sender': self.__class__.__name__, 'isDirty': bool(self.fieldChecksums)}
 
         self.signals.emit("data-content-changed", userData)
 

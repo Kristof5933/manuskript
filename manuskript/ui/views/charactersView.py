@@ -103,9 +103,9 @@ class CharactersView(AbstractView):
         self.goalBuffer.connect("changed", self._goalChanged)
         self.conflictBuffer.connect("changed", self._conflictChanged)
         self.epiphanyBuffer.connect("changed", self._epiphanyChanged)
-        self.oneSentenceBuffer.connect("changed", self._oneSentenceChanged)
-        self.oneParagraphBuffer.connect("changed", self._oneParagraphChanged)
-        self.summaryBuffer.connect("changed", self._summaryChanged)
+        self.oneSentenceBuffer.connect("changed", self._summarySentenceChanged)
+        self.oneParagraphBuffer.connect("changed", self._summaryParagraphChanged)
+        self.summaryBuffer.connect("changed", self._summaryFullChanged)
         self.notesBuffer.connect("changed", self._notesChanged)
 
         self.unloadCharacterData()
@@ -264,7 +264,7 @@ class CharactersView(AbstractView):
         if (importance is None) or (self.character.importance == importance):
             return
 
-        self.character.importance = importance
+        self.character.setImportanceNotifyOnChange(importance)
 
         character_id = self.character.UID.value
 
@@ -290,7 +290,7 @@ class CharactersView(AbstractView):
         if self.character is None:
             return
 
-        self.character.POV = button.get_active()
+        self.character.setPOVNotifyOnChange(button.get_active())
 
     def _addDetailsClicked(self, button: Gtk.Button):
         if self.character is None:
@@ -358,7 +358,7 @@ class CharactersView(AbstractView):
         text = buffer.get_text()
         name = invalidString(text)
 
-        self.character.name = name
+        self.character.setNameNotifyOnChange(name)
 
         character_id = self.character.UID.value
 
@@ -382,7 +382,7 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.motivation = invalidString(text)
+        self.character.setMotivationNotifyOnChange(invalidString(text))
 
     def _goalChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
@@ -393,7 +393,7 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.goal = invalidString(text)
+        self.character.setGoalNotifyOnChange(invalidString(text))
 
     def _conflictChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
@@ -404,7 +404,7 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.conflict = invalidString(text)
+        self.character.setConflictNotifyOnChange(invalidString(text))
 
     def _epiphanyChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
@@ -415,9 +415,9 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.epiphany = invalidString(text)
+        self.character.setEpiphanyNotifyOnChange(invalidString(text))
 
-    def _oneSentenceChanged(self, buffer: Gtk.TextBuffer):
+    def _summarySentenceChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
             return
 
@@ -426,9 +426,9 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.summarySentence = invalidString(text)
+        self.character.setSummarySentenceNotifyOnChange(invalidString(text))
 
-    def _oneParagraphChanged(self, buffer: Gtk.TextBuffer):
+    def _summaryParagraphChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
             return
 
@@ -437,9 +437,9 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.summaryParagraph = invalidString(text)
+        self.character.setSummaryParagraphNotifyOnChange(invalidString(text))
 
-    def _summaryChanged(self, buffer: Gtk.TextBuffer):
+    def _summaryFullChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
             return
 
@@ -448,7 +448,7 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.summaryFull = invalidString(text)
+        self.character.setSummaryFullNotifyOnChange(invalidString(text))
 
     def _notesChanged(self, buffer: Gtk.TextBuffer):
         if self.character is None:
@@ -459,4 +459,4 @@ class CharactersView(AbstractView):
 
         text = buffer.get_text(start_iter, end_iter, False)
 
-        self.character.notes = invalidString(text)
+        self.character.setNotesNotifyOnChange(invalidString(text))
